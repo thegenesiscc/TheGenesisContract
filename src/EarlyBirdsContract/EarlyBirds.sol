@@ -85,4 +85,6 @@ contract EarlyBirds is Ownable {
             );
         }
     }
+     // Receive BNB
+    receive() external payable {}
 }
