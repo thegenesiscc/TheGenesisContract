@@ -137,6 +137,11 @@ contract Invitation is Ownable {
     function getTotalCounts() external view returns (uint256, uint256) {
         return (totalInviters, totalInvitees); // Return total inviters and invitees count
     }
+    // Get the invitation information for a specific address
+    function getInviteInfo(address _invitee) external view returns (address[] memory) {
+        // Return the inviter list for the specified invitee
+        return inviteInfo[_invitee].inviterList; // Return the detailed list of inviters
+    }
 
     // Check if an address is a contract address
     function isContract(address _addr) internal view returns (bool) {
@@ -163,4 +168,6 @@ contract Invitation is Ownable {
 
     // Receive ETH
     receive() external payable {}
+
+    
 }

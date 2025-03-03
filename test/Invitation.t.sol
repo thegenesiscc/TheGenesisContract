@@ -93,4 +93,14 @@ contract InvitationTest is Test {
         vm.expectRevert("Mutual invitations are not allowed"); // Expect revert due to existing inviter
         invitation.bindInvitation(addr1); // addr2 (B) tries to invite addr1 (A)
     }
+
+    function testGetInviteInfo() public {
+        // A invites B
+        vm.prank(owner);
+        invitation.bindInvitation(addr1); // owner invites addr1
+
+        // Check invite info for addr1
+        address[] memory invitees = invitation.getInviteInfo(addr1);
+        assertEq(invitees[0], owner); // Ensure addr1 is in the invitee list
+    }
 }
