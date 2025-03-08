@@ -12,7 +12,7 @@ contract EarlyBirdsScript is Script {
     function run() public {
         vm.startBroadcast();
 
-        counter = new EarlyBirds(msg.sender);
+        counter = new EarlyBirds(msg.sender,0x0000000000000000000000000000000000000000);
 
         vm.stopBroadcast();
     }

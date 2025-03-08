@@ -12,6 +12,7 @@ contract EarlyBirds is Ownable {
     mapping(address => bool) public participants; // Record of participants
     address[] public participantList; // List of participant addresses
     bool public isActive; // Activity status
+    address public treasury; // Treasury address
 
     event Registered(address indexed participant);
     event ActivityStarted();
@@ -28,8 +29,9 @@ contract EarlyBirds is Ownable {
         _;
     }
 
-    constructor(address _owner) Ownable(_owner) {
+    constructor(address _owner,address _treasury) Ownable(_owner) {
         isActive = false; // Initial state is inactive
+        treasury = _treasury;
     }
 
     // Registration function
@@ -40,7 +42,22 @@ contract EarlyBirds is Ownable {
         participants[msg.sender] = true;
         participantList.push(msg.sender);
 
+        // Transfer the registration fee to the treasury
+        (bool success, ) = treasury.call{value: msg.value}("");
+        require(success, "Transfer failed");    
+
         emit Registered(msg.sender);
+    } //Admin Registration function
+    function registerByAdmin(address[] calldata _addressList) external onlyOwner {
+        for (uint256 i = 0; i < _addressList.length; i++) {
+            address _address = _addressList[i];
+            require(!participants[_address], "Already registered");
+            require(participantList.length < MAX_PARTICIPANTS, "Max participants reached");
+            participants[_address] = true;
+            participantList.push(_address);
+
+            emit Registered(_address);
+        }
     }
 
     // Query if a specific address has participated in the early bird purchase
